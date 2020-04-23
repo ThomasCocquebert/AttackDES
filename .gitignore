@@ -2,3 +2,6 @@
 *.docx
 *.html
 *.exe
+*.o
+test
+AttackDES

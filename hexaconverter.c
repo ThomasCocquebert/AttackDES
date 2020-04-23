@@ -1,39 +1,31 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
-
-typedef struct translateTable {
-	char* symbol;
-	char** value;
-} TRANSTABLE;
+#include "hexaconverter.h"
 
 TRANSTABLE initTable() {
-	//Init memory of the structure
-	//TRANSTABLE table = malloc(sizeof(TRANSTABLE));
 	TRANSTABLE table;
-	table.symbol = malloc(sizeof(char)*16);
-	table.value = malloc(sizeof(char*)*16);
 
 	//initialization of sybol field
-	strcpy(table.symbol, "0123456789ABCDEF");
-
+	strncpy(table.symbol, "0123456789ABCDEF",16);
+	
 	//Initilalization of value field
-	table.value[0] = "0000";
-	table.value[1] = "0001";
-	table.value[2] = "0010";
-	table.value[3] = "0011";
-	table.value[4] = "0100";
-	table.value[5] = "0101";
-	table.value[6] = "0110";
-	table.value[7] = "0111";
-	table.value[8] = "1000";
-	table.value[9] = "1001";
-	table.value[10] = "1010";
-	table.value[11] = "1011";
-	table.value[12] = "1100";
-	table.value[13] = "1101";
-	table.value[14] = "1110";
-	table.value[15] = "1111";
+	strncpy(table.value[0],"0000",4);
+	strncpy(table.value[1],"0001",4);
+	strncpy(table.value[2],"0010",4);
+	strncpy(table.value[3],"0011",4);
+	strncpy(table.value[4],"0100",4);
+	strncpy(table.value[5],"0101",4);
+	strncpy(table.value[6],"0110",4);
+	strncpy(table.value[7],"0111",4);
+	strncpy(table.value[8],"1000",4);
+	strncpy(table.value[9],"1001",4);
+	strncpy(table.value[10],"1010",4);
+	strncpy(table.value[11],"1011",4);
+	strncpy(table.value[12],"1100",4);
+	strncpy(table.value[13],"1101",4);
+	strncpy(table.value[14],"1110",4);
+	strncpy(table.value[15],"1111",4);
 
 	return table;
 }
@@ -45,101 +37,97 @@ void printTRANSTABLE(TRANSTABLE table) {
 	}
 }
 
-void freeTRANSTABLE(TRANSTABLE table) {
-	free(table.symbol);
-	free(table.value);
-}
-
 void errorInput() {
 	printf("Error : unreadable input\n");
 	printf("Your input must contain no other character than 0 1 2 3 4 5 6 7 8 9 A B C D E F\n");
 }
 
 char* convert(const char* input) {
-	printf("Checkin convert(input)\n");
+	//Initialization of variable
 	TRANSTABLE table = initTable();
 	int size = strlen(input);
-	char* output = "";
+	char* output = malloc(sizeof(char)*(4*size+1));
+	strncpy(output, "",(4*size));
 
+	//Main loop
+	//Check every cahracter of the input
+	//Add there binary representation in the output string
+	//Return the output string or "NULL" string in case of unreadable character
 	int i = 0;
 	for(i = 0; i < size; i++) {
 		switch(input[i]) {
 			case '0': 
-				strcat(output, table.value[0]);
+				strncat(output, table.value[0],4);
 				break;
 
 			case '1':
-				strcat(output, table.value[1]);
+				strncat(output, table.value[1],4);
 				break;
 
 			case '2':
-				strcat(output, table.value[2]);
+				strncat(output, table.value[2],4);
 				break;
 
 			case '3':
-				strcat(output, table.value[3]);
+				strncat(output, table.value[3],4);
 				break;
 
 			case '4':
-				strcat(output, table.value[4]);
+				strncat(output, table.value[4],4);
 				break;
 
 			case '5':
-				strcat(output, table.value[5]);
+				strncat(output, table.value[5],4);
 				break;
 
 			case '6':
-				strcat(output, table.value[6]);
+				strncat(output, table.value[6],4);
 				break;
 
 			case '7':
-				strcat(output, table.value[7]);
+				strncat(output, table.value[7],4);
 				break;
 
 			case '8':
-				strcat(output, table.value[8]);
+				strncat(output, table.value[8],4);
 				break;
 
 			case '9':
-				strcat(output, table.value[9]);
+				strncat(output, table.value[9],4);
 				break;
 
 			case 'A':
-				strcat(output, table.value[10]);
+				strncat(output, table.value[10],4);
 				break;
 
 			case 'B':
-				strcat(output, table.value[11]);
+				strncat(output, table.value[11],4);
 				break;
 
 			case 'C':
-				strcat(output, table.value[12]);
+				strncat(output, table.value[12],4);
 				break;
 
 			case 'D':
-				strcat(output, table.value[13]);
+				strncat(output, table.value[13],4);
 				break;
 
 			case 'E':
-				strcat(output, table.value[14]);
+				strncat(output, table.value[14],4);
 				break;
 
 			case 'F':
-				strcat(output, table.value[15]);
+				strncat(output, table.value[15],4);
 				break;
 
+			//We print the error messages before return "NULL"
 			default:
 				errorInput();
-				freeTRANSTABLE(table);
-				return "0";
+				free(output);
+				return "";
 		}
 	}
 
+	//Return the output string and free
 	return output;
-}
-
-int main(int argc, char** argv) {
-	const char input[3] = "000";
-	printf("%s\n", convert(input));
-	exit(EXIT_SUCCESS);
 }
