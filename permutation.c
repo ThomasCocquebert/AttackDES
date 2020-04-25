@@ -28,6 +28,39 @@ void initIPInvert(int* ip) {
 
 }
 
+void initP(int* p) {
+	p[0] = 16; p[1] = 7; p[2] = 20; p[3] = 21;
+	p[4] = 29; p[5] = 12; p[6] = 28; p[7] = 17;
+	p[8] = 1; p[9] = 15; p[10] = 23; p[11] = 26;
+	p[12] = 5; p[13] = 18; p[14] = 31; p[15] = 10;
+	p[16] = 2; p[17] = 8; p[18] = 24; p[19] = 14;
+	p[20] = 32; p[21] = 27; p[22] = 3; p[23] = 9;
+	p[24] = 19; p[25] = 13; p[26] = 30; p[27] = 6;
+	p[28] = 22; p[29] = 11; p[30] = 4; p[31] = 25;
+}
+
+void initPInvert(int* p) {
+	p[0] = 9; p[1] = 17; p[2] = 23; p[3] = 31;
+	p[4] = 13; p[5] = 28; p[6] = 2; p[7] = 18;
+	p[8] = 24; p[9] = 16; p[10] = 30; p[11] = 6;
+	p[12] = 26; p[13] = 20; p[14] = 10; p[15] = 1;
+	p[16] = 8; p[17] = 14; p[18] = 25; p[19] = 3;
+	p[20] = 4; p[21] = 29; p[22] = 11; p[23] = 19;
+	p[24] = 32; p[25] = 12; p[26] = 22; p[27] = 7;
+	p[28] = 5; p[29] = 27; p[30] = 15; p[31] = 21;
+}
+
+void initExtension(int* e) {
+	e[0] = 32; e[1] = 1; e[2] = 2; e[3] = 3; e[4] = 4; e[5] = 5;
+	e[6] = 4; e[7] = 5; e[8] = 6; e[9] = 7; e[10] = 8; e[11] = 9;
+	e[12] = 8; e[13] = 9; e[14] = 10; e[15] = 11; e[16] = 12; e[17] = 13;
+	e[18] = 12; e[19] = 13; e[20] = 14; e[21] = 15; e[22] = 16; e[23] = 17;
+	e[24] = 16; e[25] = 17; e[26] = 18; e[27] = 19; e[28] = 20; e[29] = 21;
+	e[30] = 20; e[31] = 21; e[32] = 22; e[33] = 23; e[34] = 24; e[35] = 25;
+	e[36] = 24; e[37] = 25; e[38] = 26; e[39] = 27; e[40] = 28; e[41] = 29;
+	e[42] = 28; e[43] = 29; e[44] = 30; e[45] = 31; e[46] = 32; e[47] = 1;
+}
+
 char* processIP(const char* input) {
 
 	//Allocation of the output string
@@ -72,7 +105,71 @@ char* processIPInvert(const char* input) {
 	return output;
 }
 
+char* processP(const char* input) {
 
+	char* output = malloc(sizeof(char)*33);
+	output[32] = '\0';
+
+	int* p = calloc(32, sizeof(int));
+	initP(p);
+
+	int i = 0;
+	for(i = 0; i < 32; i++) {
+		output[i] = input[p[i]-1];
+	}
+
+	free(p);
+	return output;
+}
+
+char* processPInvert(const char* input) {
+
+	char* output = malloc(sizeof(char)*33);
+	output[32] = '\0';
+
+	int* p = calloc(32, sizeof(int));
+	initPInvert(p);
+
+	int i = 0;
+	for(i = 0; i < 32; i++) {
+		output[i] = input[p[i]-1];
+	}
+
+	free(p);
+	return output;
+}
+
+char* processExtension(const char* input) {
+	char* output = malloc(sizeof(char)*49);
+	output[48] = '\0';
+
+	int* e = calloc(48, sizeof(int));
+	initExtension(e);
+
+	int i = 0;
+	for(i = 0; i < 48; i++) {
+		output[i] = input[e[i] - 1];
+	}
+
+	free(e);
+	return output;
+}
+
+int main(int argc, char** argv) {
+	if(argc == 1) {
+		printf("Argument connard\n");
+		exit(EXIT_FAILURE);
+	}
+
+	const char* input = argv[1];
+
+	char* e = processExtension(input);
+	printf("length : %d\n", strlen(e));
+	printf("%s\n", e);
+	free(e);
+
+	exit(EXIT_SUCCESS);
+}
 
 /*
 int main(int argc, char** argv) {
