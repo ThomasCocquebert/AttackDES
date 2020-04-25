@@ -29,35 +29,52 @@ void initIPInvert(int* ip) {
 }
 
 char* processIP(const char* input) {
+
+	//Allocation of the output string
 	char* output = malloc(sizeof(char)*65);
 	output[64] = '\0';
+
+	//Allocation of the IP array
 	int* ip = calloc(64, sizeof(int));
 	initIP(ip);
-	int i = 0;
 
+	//Main loop
+	//put in the output string each character transformed by the IP
+	int i = 0;
 	for(i = 0; i < 64; i++) {
 		output[i] = input[ip[i]-1];
 	}
 
+	//free the IP array and return the output String
 	free(ip);
 	return output;
 }
 
 char* processIPInvert(const char* input) {
+
+	//Allocation of the output string
 	char* output = malloc(sizeof(char)*65);
 	output[64] = '\0';
-	int* ip = calloc(64, sizeof(int));
-	initIPInvert(ip);
-	int i = 0;
 
+	//Allocation of the IP-1 array
+	int* ipInvert = calloc(64, sizeof(int));
+	initIPInvert(ipInvert);
+
+	//Main loop
+	//put in the output string each character transformed by the IP
+	int i = 0;
 	for(i = 0; i < 64; i++) {
-		output[i] = input[ip[i]-1];
+		output[i] = input[ipInvert[i]-1];
 	}
 
-	free(ip);
+	//free the IP array and return the output String
+	free(ipInvert);
 	return output;
 }
 
+
+
+/*
 int main(int argc, char** argv) {
 	const char* input = argv[1];
 	if(strlen(input)!=64) {
@@ -85,3 +102,4 @@ int main(int argc, char** argv) {
 	free(xor);
 	exit(EXIT_SUCCESS);
 }
+*/
