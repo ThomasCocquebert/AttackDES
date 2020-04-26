@@ -1,19 +1,10 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "string.h"
+#include "sbox.h"
 
-//struct for one sbox
-//just comossed of a 3 dimension Array
-//First dimension use for detrmined which sbox use
-//Second dimension is for the columne
-//Third dimension is for the line
-typedef struct sbox {
-	int tab[8][16][4];
-} SBOX;
-
-SBOX initSBOX() {
-
-	SBOX boxs;
+SBOXES initSBOXES() {
+	SBOXES boxs;
 
 	//First Sbox
 	boxs.tab[0][0][0] = 14; 	boxs.tab[0][0][1] = 0; 		boxs.tab[0][0][2] = 4; 		boxs.tab[0][0][3] = 15;
@@ -238,24 +229,39 @@ char* lineToBinary(int line) {
 }
 
 void invertSbox(int columne, int line, char* input) {
+	//Initialization of string binaryColumne and binaryLine
 	char* binaryColumne = "0000";
 	char* binaryLine = "00";
 
-	printf("Print of input before copy : %s\n", input);
+	//Translate the columne and line value in a string representing the binary form
 	binaryColumne  = columneToBinary(columne);
 	binaryLine = lineToBinary(line);
 
-	input[0] = binaryLine[0];
-	for(int i = 0; i < 4; i++) {
-		input[i+1] = binaryColumne[i];
-		printf("Char %d of input : %c\n", i+1, input[i+1]);
+	//Test if bianryLine and Binary Columne are valid
+	//If not put Error in the input string
+	//Else put the right input of the Sbox
+	if(!strncmp(binaryLine,"-1", 2) && !strncmp(binaryColumne,"erno", 4)) {
+
+		printf("Error in invertSbox\n");
+		printf("Faile to transform into string the line or columne\n");
+		strncpy(input, "Error", 5);
+
+	} else {
+
+		input[0] = binaryLine[0];
+		for(int i = 0; i < 4; i++) {
+			input[i+1] = binaryColumne[i];
+		}
+		input[5] = binaryLine[1];
 	}
-	input[5] = binaryLine[1];
 }
 
-void findInput(char* try1, char* try2, char* try3, char* try4, SBOX boxes, int numSbox, int sboxOutput) {
+void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int numSbox, int sboxOutput) {
+
 	int i = 0;
 
+	//Just a loop searching in each line of a sbox the maching cell
+	//And put after that invertSbox function in one of the four strings
 	for(i = 0; i < 16; i++) {
 		if(boxes.tab[numSbox][i][0] == sboxOutput) {
 			invertSbox(i, 0, try1);
@@ -277,27 +283,4 @@ void findInput(char* try1, char* try2, char* try3, char* try4, SBOX boxes, int n
 			invertSbox(i, 3, try4);
 		}
 	}
-}
-
-
-
-int main(int argc, char** argv) {
-	SBOX boxes = initSBOX();
-	char try1[7];
-	char try2[7];
-	char try3[7];
-	char try4[7];
-
-	strncpy(try1,"",7);
-	strncpy(try2,"",7);
-	strncpy(try3,"",7);
-	strncpy(try4,"",7);
-
-	findInput(try1, try2, try3, try4, boxes, 0, 6);
-
-	printf("try1 : %s\n", try1);
-	printf("try2 : %s\n", try2);
-	printf("try3 : %s\n", try3);
-	printf("try4 : %s\n", try4);
-	exit(EXIT_SUCCESS);
 }

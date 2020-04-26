@@ -4,6 +4,9 @@ hexaconverter.o: hexaconverter.c
 permutation.o: permutation.c
 	gcc -Wall -g -c permutation.c
 
+sbox.o: sbox.c
+	gcc -Wall -g -c sbox.c
+
 main.o: main.c hexaconverter.h permutation.h
 	gcc -Wall -g -c main.c
 

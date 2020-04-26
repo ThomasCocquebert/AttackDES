@@ -107,96 +107,66 @@ char* processIPInvert(const char* input) {
 
 char* processP(const char* input) {
 
+	//Allocation of the ouput String
 	char* output = malloc(sizeof(char)*33);
 	output[32] = '\0';
 
+	//Allocation of the P array
 	int* p = calloc(32, sizeof(int));
 	initP(p);
 
+	//Main loop
+	//put in the output string each character transformed by the P
 	int i = 0;
 	for(i = 0; i < 32; i++) {
 		output[i] = input[p[i]-1];
 	}
 
+	//free the P array and return the output String
 	free(p);
 	return output;
 }
 
 char* processPInvert(const char* input) {
 
+	//Allocation of the ouput String
 	char* output = malloc(sizeof(char)*33);
 	output[32] = '\0';
 
-	int* p = calloc(32, sizeof(int));
-	initPInvert(p);
+	//Allocation of the PInvert array
+	int* pInvert = calloc(32, sizeof(int));
+	initPInvert(pInvert);
 
+	//Main loop
+	//put in the output string each character transformed by the PInvert
 	int i = 0;
 	for(i = 0; i < 32; i++) {
-		output[i] = input[p[i]-1];
+		output[i] = input[pInvert[i]-1];
 	}
 
-	free(p);
+	//free the PInvert array and return the output String
+	free(pInvert);
 	return output;
 }
 
 char* processExtension(const char* input) {
+
+	//Allocation of the output String
 	char* output = malloc(sizeof(char)*49);
 	output[48] = '\0';
 
+	//Allocation if the E array
 	int* e = calloc(48, sizeof(int));
 	initExtension(e);
 
+	//Main loop
+	//put in the outptut string the extension of the input syting
 	int i = 0;
 	for(i = 0; i < 48; i++) {
 		output[i] = input[e[i] - 1];
 	}
 
+	//free the E array and return the output string
 	free(e);
 	return output;
 }
-
-int main(int argc, char** argv) {
-	if(argc == 1) {
-		printf("Argument connard\n");
-		exit(EXIT_FAILURE);
-	}
-
-	const char* input = argv[1];
-
-	char* e = processExtension(input);
-	printf("length : %d\n", strlen(e));
-	printf("%s\n", e);
-	free(e);
-
-	exit(EXIT_SUCCESS);
-}
-
-/*
-int main(int argc, char** argv) {
-	const char* input = argv[1];
-	if(strlen(input)!=64) {
-		printf("Your input must be a 64 characters string\n");
-		exit(EXIT_FAILURE);
-	}
-
-	char* ip = processIP(input);
-	printf("%s\n", ip);
-
-	char* ipInvert = processIPInvert(ip);
-	printf("%s\n", ipInvert);
-
-	char* xor = malloc(sizeof(char)*65);
-	xor[64] = '\0';
-	int i = 0;
-
-	for(i = 0; i < 64; i++) {
-		xor[i] = (input[i] == ipInvert[i]) ? '0' : '1';
-	}
-	printf("%s\n", xor);
-
-	free(ip);
-	free(ipInvert);
-	free(xor);
-	exit(EXIT_SUCCESS);
-}
-*/
