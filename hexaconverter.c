@@ -131,3 +131,15 @@ char* convert(const char* input) {
 	//Return the output string and free
 	return output;
 }
+
+void splitBinary(char* C, char* L, char* R) {
+
+	for (int i = 0; i < 32; i++) {
+		L[i] = C[i];
+	}
+
+	for (int i = 0; i < 32; i++) {
+		R[i] = C[i+32];
+	}
+	
+}

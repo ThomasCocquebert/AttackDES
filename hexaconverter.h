@@ -23,4 +23,8 @@ void errorInput();
 //You must store the return of this function in a variable and make a free() on it before exit the program
 char* convert(const char* input);
 
+//Take C string and copy the first 32 element in L and the last 32 element in R
+//ONLY WORK FOR 64 characters string !
+void splitBinary(char* C, char* L, char* R);
+
 #endif

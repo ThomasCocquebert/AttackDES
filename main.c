@@ -3,45 +3,101 @@
 #include "string.h"
 #include "hexaconverter.h"
 #include "permutation.h"
+#include "sbox.h"
+#include "xor.h"
 
 int main(int argc, char** argv) {
 
-	//Conversion of the input hexadecimal string in binary
-	const char* input = argv[1];
-	printf("Input : %s\n", input);
-	char* output = convert(input);
+	//Initialization of C and CFalt
+	char* C = malloc(sizeof(char) * 17);
+	char* CFalt = malloc(sizeof(char) * 17);
+	C[16] = '\0';
+	CFalt[16] = '\0';
+	char tmp[100] = "";
+	strncpy(C,"B28CE4DE649B24C7",16);
+	strncpy(CFalt,"",16);
 
-	if(!strncmp(output,"",(strlen(input)*4))) {
+	//Copy of enter string in CFalt and checking of the size
+	printf("Enter your hexadecimal number :\n");
+	scanf("%s", tmp);
+
+	if(strlen(tmp) != 16) {
+		printf("You must enter a 16 character hexadecimal number\n");
+		free(C);
+		free(CFalt);
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Input in binary : %s\n", output);
+	strncpy(CFalt, tmp, 16);
 
-	//IP, IP-1 transformations and XOR between then
-	if(strlen(output) != 64) {
-		printf("Your binary representation must be an 64 bits number\n");
-		free(output);
-		exit(EXIT_FAILURE);
-	}
+	//Tranformation into Binary of C and CFalt
+	//Memory freeid of C and CFalt after transformation
+	//printf("---Transformation into binary number---\n");
 
-	char* ip = processIP(output);
-	printf("Binary after IP : %s\n", ip);
+	char* CBinary = convert(C);
+	char* CFaltBinary = convert(CFalt);
 
-	char* ipInvert = processIPInvert(ip);
-	printf("Binary after IP-1 : %s\n", ipInvert);
+	free(C);
+	free(CFalt);
+	//printf("---Transformation ended---\n");
 
-	char* xor = malloc(sizeof(char)*65);
-	xor[64] = '\0';
-	int i = 0;
+	//Process IP Transformation
+	//Memory freeied of CBinary and CFaltBinary after permutation
+	//printf("---Process IP---\n");
 
-	for(i = 0; i < 64; i++) {
-		xor[i] = (input[i] == ipInvert[i]) ? '0' : '1';
-	}
-	printf("Result of the XOR between IP(input) and IP-1(input) : %s\n", xor);
+	char* CIP = processIP(CBinary);
+	char* CFaltIP = processIP(CFaltBinary);
 
-	free(output);
-	free(ip);
-	free(ipInvert);
-	free(xor);
+	free(CBinary);
+	free(CFaltBinary);
+
+	//printf("---Processing IP ended---\n");
+
+	//Splitting CIP and CFaltIP into L16, R16, L16Falt and R16Falt
+	//printf("---Splitting of CBinary and CFaltBinary---\n");
+
+	//Initialization of L16, R16, L16Falt and R16Falt
+	printf("\nC = (L16, R16)		C' = (L16', R16')\n");
+	char* L16 = malloc(sizeof(char) * 33);
+	L16[32] = '\0';
+	char* R16 = malloc(sizeof(char) * 33);
+	R16[32] = '\0';
+	char* L16Falt = malloc(sizeof(char) * 33);
+	L16Falt[32] = '\0';
+	char* R16Falt = malloc(sizeof(char) * 33);
+	R16Falt[32] = '\0';
+	strncpy(L16, "", 32);
+	strncpy(R16, "", 32);
+	strncpy(L16Falt, "", 32);
+	strncpy(R16Falt, "", 32);
+
+	splitBinary(CIP, L16, R16);
+	splitBinary(CFaltIP, L16Falt, R16Falt);
+
+	free(CIP);
+	free(CFaltIP);
+
+	printf("L16 : %s\n", L16);
+	printf("R16 : %s\n", R16);
+	printf("L16' : %s\n", L16Falt);
+	printf("R16' : %s\n", R16Falt);
+	//printf("---Splitting ended---\n");
+
+	//printf("---XORing R16 and R16'\n");
+
+	char*  xorR16 = xoring(R16, R16Falt, 32);
+	printf("XOR R16 R16' : %s\n", xorR16);
+
+	char* xorL16 = xoring(L16, L16Falt, 32);
+	printf("XOR L16 L16' : %s\n", xorL16);
+
+	//printf("---XORing ended---\n");
+
+	free(xorR16);
+	free(xorL16);
+	free(L16);
+	free(R16);
+	free(L16Falt);
+	free(R16Falt);
 	exit(EXIT_SUCCESS);
 }
