@@ -2,34 +2,39 @@
 #include "stdio.h"
 #include "string.h"
 
-int main(int argc, char** argv) {
-	char input1[65];
-	char input2[65];
-
-	printf("Enter your first binary number\n");
-	scanf("%s", input1);
-
-	printf("Enter your second binary number\n");
-	scanf("%s", input2);
-
+int checkSize(char* input1, char* input2) {
 	if(strlen(input1) != strlen(input2)) {
-		printf("Your numbers must have the same number of bits\n");
-		exit(EXIT_FAILURE);
+		return 0;
 	}
 
-	char* xor = malloc(sizeof(char)*strlen(input1)+1);
-	xor[strlen(input1)] = '\0';
+	return 1;
+}
 
-	for(int i = 0; i < strlen(input1); i++) {
-		if(input1[i] != '0' || input1[i] != '1' || input2[i] != '0' || input2[i] != '1') {
-			printf("Your numbers must contain only 0 or 1\n");
-			exit(EXIT_FAILURE);
+int checkSymbol(char input1, char input2) {
+	if((input1 != '0' && input1 != '1') || (input2 != '0' && input2 != '1')) {
+		return 0
+	}
+
+	return 1;
+}
+
+char* xor(input1, input2, int sizeXOR) {
+
+	if(!checkSize(input1, input2)) {
+		printf("Invalid size : can't XOR\n");
+		return "";
+	}
+
+	char xor[sizeXOR+1];
+	xor[sizeXOR] = '\0';
+
+	for(int i = 0; i < sizeXOR; i++) {
+		if(checkSymbol(input1[i], input2[i])) {
+			xor[i] = (input1[i] == input2[i]) ? '0' : '1';
+		} else {
+			printf("Invalid symbol : can't XOR\n");
+			return "";
 		}
-		xor[i] = (input1[i] == input2[i]) ? '0' : '1';
 	}
-
-	printf("XOR of the two numbers :\n");
-	printf("%s\n", xor);
-
-	exit(EXIT_SUCCESS);
+	return xor;
 }
