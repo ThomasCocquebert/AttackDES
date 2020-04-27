@@ -7,6 +7,7 @@
 #include "xor.h"
 
 int main(int argc, char** argv) {
+	//Construction of the split in R16 and L16 for the right cyphered text
 	char C[17] = "B28CE4DE649B24C7";
 	char* CBinary = convert(C);
 	char* CIP = processIP(CBinary);
@@ -16,6 +17,7 @@ int main(int argc, char** argv) {
 	R16[32] = '\0';
 	splitBinary(CIP, L16, R16);
 
+	//Constrcution of the split in R16 and L16 for the wrong cyphered text
 	char CFalt[32][17] = {
 		"B088E49E649A24D7", "B29EE49A649B24C7", "B28CE6DA649A24C7", "B2DCE098749A24C7", "B2DCE0DA769B24C7", "B3CCE0DE649924C7",
 		"B28CE0DE749B26C7", "B38CE4DF748F24C5", "BACCE0DF648B24C7", "B284E4DF248B24C7", "B28CECDF249F24C7", "B28CF4D7248F24C6",
@@ -45,6 +47,7 @@ int main(int argc, char** argv) {
 		splitBinary(CFaltIP[i], L16Falt[i], R16Falt[i]);
 	}
 
+	//Xor and invert of the P permutation for the XOR of R16 and R16'
 	char* XORR16[32];
 	for(int i = 0; i < 32; i++) {
 		XORR16[i] = xoring(R16, R16Falt[i], 32);
@@ -55,10 +58,21 @@ int main(int argc, char** argv) {
 		PInvertXOR[i] = processPInvert(XORR16[i]);
 	}
 
+	//Extension of R15
+	char* ER15 = processExtention(L16);
+
+	char* ER15Falt[32];
+	for(int i = 0; i < 32; i++) {
+		ER15Falt[i] = processExtention(L16Falt);
+	}
+
+
+
 	free(CBinary);
 	free(CIP);
 	free(L16);
 	free(R16);
+	free(ER15)
 	for(int i = 0; i < 32; i++) {
 		free(CFaltBinary[i]);
 		free(CFaltIP[i]);
@@ -66,5 +80,6 @@ int main(int argc, char** argv) {
 		free(R16Falt[i]);
 		free(XORR16[i]);
 		free(PInvertXOR[i]);
+		free(ER15Falt[i]);
 	}
 }
