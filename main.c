@@ -7,97 +7,64 @@
 #include "xor.h"
 
 int main(int argc, char** argv) {
-
-	//Initialization of C and CFalt
-	char* C = malloc(sizeof(char) * 17);
-	char* CFalt = malloc(sizeof(char) * 17);
-	C[16] = '\0';
-	CFalt[16] = '\0';
-	char tmp[100] = "";
-	strncpy(C,"B28CE4DE649B24C7",16);
-	strncpy(CFalt,"",16);
-
-	//Copy of enter string in CFalt and checking of the size
-	printf("Enter your hexadecimal number :\n");
-	scanf("%s", tmp);
-
-	if(strlen(tmp) != 16) {
-		printf("You must enter a 16 character hexadecimal number\n");
-		free(C);
-		free(CFalt);
-		exit(EXIT_FAILURE);
-	}
-
-	strncpy(CFalt, tmp, 16);
-
-	//Tranformation into Binary of C and CFalt
-	//Memory freeid of C and CFalt after transformation
-	//printf("---Transformation into binary number---\n");
-
+	char C[17] = "B28CE4DE649B24C7";
 	char* CBinary = convert(C);
-	char* CFaltBinary = convert(CFalt);
-
-	free(C);
-	free(CFalt);
-	//printf("---Transformation ended---\n");
-
-	//Process IP Transformation
-	//Memory freeied of CBinary and CFaltBinary after permutation
-	//printf("---Process IP---\n");
-
 	char* CIP = processIP(CBinary);
-	char* CFaltIP = processIP(CFaltBinary);
-
-	free(CBinary);
-	free(CFaltBinary);
-
-	//printf("---Processing IP ended---\n");
-
-	//Splitting CIP and CFaltIP into L16, R16, L16Falt and R16Falt
-	//printf("---Splitting of CBinary and CFaltBinary---\n");
-
-	//Initialization of L16, R16, L16Falt and R16Falt
-	printf("\nC = (L16, R16)		C' = (L16', R16')\n");
 	char* L16 = malloc(sizeof(char) * 33);
 	L16[32] = '\0';
 	char* R16 = malloc(sizeof(char) * 33);
 	R16[32] = '\0';
-	char* L16Falt = malloc(sizeof(char) * 33);
-	L16Falt[32] = '\0';
-	char* R16Falt = malloc(sizeof(char) * 33);
-	R16Falt[32] = '\0';
-	strncpy(L16, "", 32);
-	strncpy(R16, "", 32);
-	strncpy(L16Falt, "", 32);
-	strncpy(R16Falt, "", 32);
-
 	splitBinary(CIP, L16, R16);
-	splitBinary(CFaltIP, L16Falt, R16Falt);
 
+	char CFalt[32][17] = {
+		"B088E49E649A24D7", "B29EE49A649B24C7", "B28CE6DA649A24C7", "B2DCE098749A24C7", "B2DCE0DA769B24C7", "B3CCE0DE649924C7",
+		"B28CE0DE749B26C7", "B38CE4DF748F24C5", "BACCE0DF648B24C7", "B284E4DF248B24C7", "B28CECDF249F24C7", "B28CF4D7248F24C6",
+		"F28CE4DF6CCB24C7", "B28CF4DE649324C6", "F28CE4DE64DB2CC6", "B28CF4DE64DB258E", "D28CF4DE60DB34C6", "B2ACE4DE649B3487",
+		"B28CC4DE609B2587", "A68CA5FE609B2487", "A68CE4DE449B3587", "A68CE5DE64BB24C7", "B28CA5DE649B04C7", "B68CA5DE659B64E7",
+		"268CA4DE659B60C7", "B20CE4CE659B24C7", "B28C64DE659B20C7", "B288E44E649B60D3", "B288E4CEE59B24D7", "B289E4DE641B24C7",
+		"B28CE4DE649BA4D3", "B29DE4DE649A2453"
+	};
+
+	char* CFaltBinary[32];
+	for(int i = 0; i < 32; i++) {
+		CFaltBinary[i] = convert(CFalt[i]);
+	}
+
+	char* CFaltIP[32];
+	for(int i = 0; i < 32; i++) {
+		CFaltIP[i] = processIP(CFaltBinary[i]);
+	}
+
+	char* L16Falt[32];
+	char* R16Falt[32];
+	for(int i = 0; i < 32; i++) {
+		L16Falt[i] = malloc(sizeof(char) * 33);
+		R16Falt[i] = malloc(sizeof(char) * 33);
+		L16Falt[i][32] = '\0';
+		R16Falt[i][32] = '\0';
+		splitBinary(CFaltIP[i], L16Falt[i], R16Falt[i]);
+	}
+
+	char* XORR16[32];
+	for(int i = 0; i < 32; i++) {
+		XORR16[i] = xoring(R16, R16Falt[i], 32);
+	}
+
+	char* PInvertXOR[32];
+	for(int i = 0; i < 32; i++) {
+		PInvertXOR[i] = processPInvert(XORR16[i]);
+	}
+
+	free(CBinary);
 	free(CIP);
-	free(CFaltIP);
-
-	printf("L16 : %s\n", L16);
-	printf("R16 : %s\n", R16);
-	printf("L16' : %s\n", L16Falt);
-	printf("R16' : %s\n", R16Falt);
-	//printf("---Splitting ended---\n");
-
-	//printf("---XORing R16 and R16'\n");
-
-	char*  xorR16 = xoring(R16, R16Falt, 32);
-	printf("XOR R16 R16' : %s\n", xorR16);
-
-	char* xorL16 = xoring(L16, L16Falt, 32);
-	printf("XOR L16 L16' : %s\n", xorL16);
-
-	//printf("---XORing ended---\n");
-
-	free(xorR16);
-	free(xorL16);
 	free(L16);
 	free(R16);
-	free(L16Falt);
-	free(R16Falt);
-	exit(EXIT_SUCCESS);
+	for(int i = 0; i < 32; i++) {
+		free(CFaltBinary[i]);
+		free(CFaltIP[i]);
+		free(L16Falt[i]);
+		free(R16Falt[i]);
+		free(XORR16[i]);
+		free(PInvertXOR[i]);
+	}
 }
