@@ -26,10 +26,12 @@ char* lineToBinary(int line);
 void invertSbox(int columne, int line, char* input);
 
 //Find the 4 correct input possibilities for the same output
-//Take for parameters 4 strings (one for each correct input), one SBOXES representing the 8 sboxes
+//Take for parameters 4 strings (one for each correct input),
 //one int representing in which Sbox search and a string sboxOutput representing the value of the output of sbox
-void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int numSbox, int sboxOutput);
+int findInput(char* try1, char* try2, char* try3, char* try4, int numSbox, int sboxOutput);
 
-char* splitBlocks6bits(const char* input, int numSbox);
+int bits_6_ToInt(const char* input);
+
+void processSbox(const char* input, int numSbox, char* output);
 
 #endif

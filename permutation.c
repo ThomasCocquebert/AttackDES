@@ -63,6 +63,11 @@ void initExtension(int* e) {
 
 char* processIP(const char* input) {
 
+	if(strlen(input) != 64) {
+		printf("Error : Wrong input size in ProcessIP : size %lu and expected 64\n", strlen(input));
+		return "";
+	}
+
 	//Allocation of the output string
 	char* output = malloc(sizeof(char)*65);
 	output[64] = '\0';
@@ -129,6 +134,11 @@ char* processP(const char* input) {
 
 char* processPInvert(const char* input) {
 
+	if(strlen(input) != 32) {
+		printf("Error : Wrong input size in ProcessIP : size %lu and expected 32\n", strlen(input));
+		return "";
+	}
+
 	//Allocation of the ouput String
 	char* output = malloc(sizeof(char)*33);
 	output[32] = '\0';
@@ -150,7 +160,9 @@ char* processPInvert(const char* input) {
 }
 
 char* processExtension(const char* input) {
-
+	if(strlen(input) != 32) {
+		printf("Error : wrong input size in porcessExtension : size %lu and expected 32\n", strlen(input));
+	}
 	//Allocation of the output String
 	char* output = malloc(sizeof(char)*49);
 	output[48] = '\0';
@@ -168,73 +180,49 @@ char* processExtension(const char* input) {
 
 	//free the E array and return the output string
 	free(e);
+	if(strlen(output) != 48) {
+		printf("Error : wrong input size in processExtension : size %lu and expected 48\n", strlen(output));
+	}
 	return output;
 }
 
-char* splitBlocks4bits(const char* input, int numSbox) {
-	char bitsSbox[5];
-	switch(numSbox) {
-		case 1:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i] = input[i];
-			}
-			return bitsSbox;
-
-		case 2:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+4] = input[i];
-			}
-			return bitsSbox;
-
-		case 3:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+8] = input[i];
-			}
-			return bitsSbox;
-
-		case 4:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+12] = input[i];
-			}
-			return bitsSbox;
-
-		case 5:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+16] = input[i];
-			}
-			return bitsSbox;
-
-		case 6:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+20] = input[i];
-			}
-			return bitsSbox;
-
-		case 7:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+24] = input[i];
-			}
-			return bitsSbox;
-
-		case 8:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i+28] = input[i];
-			}
-			return bitsSbox;
-
-		default:
-			bitsSbox[4] = '\0';
-			for(int i = 0; i < 4; i++) {
-				bitsSbox[i] = '/';
-			}
-			return bitsSbox;
+char** splitBlocks4bits(const char* input) {
+	if(strlen(input) != 32) {
+		printf("Error : Wrong  size in input in splitBlocks4bits : size %lu and expected 32\n", strlen(input));
+		return NULL;
 	}
+	char** splitInput= malloc(sizeof(char*) * 8);
+	for(int i = 0; i < 8; i++) {
+		splitInput[i] = malloc(sizeof(char) * 5);
+		splitInput[i][4] = '\0';
+		for(int j = 0; j < 4; j++) {
+			splitInput[i][j] = input[j + (4*i)];
+		}
+		if(strlen(splitInput[i]) != 4) {
+			printf("Error : Wrong output size in splitBlocks4bits : size %lu expetced 4\n", strlen(splitInput[i]));
+			return NULL;
+		}
+	}
+	return splitInput;
 }
+
+char** splitBlocks6bits(const char* input) {
+	if(strlen(input) != 48) {
+		printf("Error : Wrong  size in input in splitBlocks4bits : size %lu and expected 48\n", strlen(input));
+		return NULL;
+	}
+	char** splitInput= malloc(sizeof(char*) * 8);
+	for(int i = 0; i < 8; i++) {
+		splitInput[i] = malloc(sizeof(char) * 7);
+		splitInput[i][6] = '\0';
+		for(int j = 0; j < 6; j++) {
+			splitInput[i][j] = input[j + (6*i)];
+		}
+		if(strlen(splitInput[i]) != 6) {
+			printf("Error : Wrong output size in splitBlocks4bits : size %lu expetced 6\n", strlen(splitInput[i]));
+			return NULL;
+		}
+	}
+	return splitInput;
+}
+

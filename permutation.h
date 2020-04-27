@@ -36,7 +36,9 @@ char* processPInvert(const char* input);
 //return the string trasnformed by the extension
 char* processExtension(const char* input);
 
-char* splitBlocks4bits(const char* input, int numSbox);
+char** splitBlocks4bits(const char* input);
+
+char** splitBlocks6bits(const char* input);
 
 
 #endif

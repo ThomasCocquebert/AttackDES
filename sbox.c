@@ -230,12 +230,8 @@ char* lineToBinary(int line) {
 
 void invertSbox(int columne, int line, char* input) {
 	//Initialization of string binaryColumne and binaryLine
-	char* binaryColumne = "0000";
-	char* binaryLine = "00";
-
-	//Translate the columne and line value in a string representing the binary form
-	binaryColumne  = columneToBinary(columne);
-	binaryLine = lineToBinary(line);
+	char* binaryColumne = columneToBinary(columne);
+	char* binaryLine = lineToBinary(line);
 
 	//Test if bianryLine and Binary Columne are valid
 	//If not put Error in the input string
@@ -247,18 +243,21 @@ void invertSbox(int columne, int line, char* input) {
 		strncpy(input, "Error", 5);
 
 	} else {
-
-		input[0] = binaryLine[0];
+		char tmp[7];
+		tmp[6] = '\0';
+		tmp[0] = binaryLine[0];
 		for(int i = 0; i < 4; i++) {
-			input[i+1] = binaryColumne[i];
+			tmp[i+1] = binaryColumne[i];
 		}
-		input[5] = binaryLine[1];
+		tmp[5] = binaryLine[1];
+
+		strncpy(input, tmp, 6);
 	}
 }
 
-void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int numSbox, int sboxOutput) {
-
+int findInput(char* try1, char* try2, char* try3, char* try4, int numSbox, int sboxOutput) {
 	int i = 0;
+	SBOXES boxes = initSBOXES();
 
 	//Just a loop searching in each line of a sbox the maching cell
 	//And put after that invertSbox function in one of the four strings
@@ -283,73 +282,76 @@ void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int
 			invertSbox(i, 3, try4);
 		}
 	}
+
+	if(strlen(try1) != 6 || strlen(try2) != 6 || strlen(try3) != 6 || strlen(try4) != 6) {
+		printf("Error : Wrong size of output in findInput : size %lu %lu %lu %lu and expected 6\n", strlen(try1), strlen(try2), strlen(try3), strlen(try4));
+		return 1;
+	}
+
+	return 0;
 }
 
-char* splitBlocks6bits(const char* input, int numSbox) {
-	char bitsSbox[7];
-	switch(numSbox) {
-		case 1:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i] = input[i];
-			}
-			return bitsSbox;
-
-		case 2:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+6] = input[i];
-			}
-			return bitsSbox;
-
-		case 3:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+12] = input[i];
-			}
-			return bitsSbox;
-
-		case 4:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+18] = input[i];
-			}
-			return bitsSbox;
-
-		case 5:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+24] = input[i];
-			}
-			return bitsSbox;
-
-		case 6:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+30] = input[i];
-			}
-			return bitsSbox;
-
-		case 7:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+36] = input[i];
-			}
-			return bitsSbox;
-
-		case 8:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i+42] = input[i];
-			}
-			return bitsSbox;
-
-		default:
-			bitsSbox[6] = '\0';
-			for(int i = 0; i < 6; i++) {
-				bitsSbox[i] = '/';
-			}
-			return bitsSbox;
+int bits_6_ToInt(const char* input) {
+	if(strlen(input) != 4) {
+		printf("Error : wrong size in bits_6_ToInt : size %lu and expected 4\n", strlen(input));
+		return -1;
+	}
+	if(strncmp(input, "0000", 5) == 0) {
+		return 0;
+	} else if(strncmp(input, "0001", 5) == 0) {
+		return 1;
+	} else if(strncmp(input, "0010", 5) == 0) {
+		return 2;
+	} else if(strncmp(input, "0011", 5) == 0) {
+		return 3;
+	} else if(strncmp(input, "0100", 5) == 0) {
+		return 4;
+	} else if(strncmp(input, "0101", 5) == 0) {
+		return 5;
+	} else if(strncmp(input, "0110", 5) == 0) {
+		return 6;
+	} else if(strncmp(input, "0111", 5) == 0) {
+		return 7;
+	} else if(strncmp(input, "1000", 5) == 0) {
+		return 8;
+	} else if(strncmp(input, "1001", 5) == 0) {
+		return 9;
+	} else if(strncmp(input, "1010", 5) == 0) {
+		return 10;
+	} else if(strncmp(input, "1011", 5) == 0) {
+		return 11;
+	} else if(strncmp(input, "1100", 5) == 0) {
+		return 12;
+	} else if(strncmp(input, "1101", 5) == 0) {
+		return 13;
+	} else if(strncmp(input, "1110", 5) == 0) {
+		return 14;
+	} else if(strncmp(input, "1111", 5) == 0) {
+		return 15;
+	} else {
+		return -1;
 	}
 }
 
+void processSbox(const char* input, int numSbox, char* output) {
+	SBOXES boxes = initSBOXES();
+	char line[3];
+	char columne[5];
+	line[2] = '\0';
+	columne[4] = '\0';
+
+	if(strlen(input) != 6) {
+		printf("Error : wrong size in processSbox : %lu and expected 6\n", strlen(input));
+	}
+
+	line[0] = input[0];
+	for(int i = 0; i < 4; i++) {
+		columne[i] = input[i+1];
+	}
+	line[1] = input[5];
+
+	int x, y;
+	x = strtol(line,'\0', 2);
+	y = strtol(columne, '\0', 2);
+	strncpy(output, columneToBinary(boxes.tab[numSbox][y][x]), 4);
+}

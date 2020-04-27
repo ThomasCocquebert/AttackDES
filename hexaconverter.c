@@ -134,6 +134,10 @@ char* convert(const char* input) {
 
 void splitBinary(char* C, char* L, char* R) {
 
+	if(strlen(C) != 64) {
+		printf("Error : Wrong input size in splitBinary : size %lu and expected 64\n", strlen(C));
+	}
+
 	for (int i = 0; i < 32; i++) {
 		L[i] = C[i];
 	}
@@ -141,5 +145,8 @@ void splitBinary(char* C, char* L, char* R) {
 	for (int i = 0; i < 32; i++) {
 		R[i] = C[i+32];
 	}
-	
+
+	if(strlen(L) != 32 || strlen(R) != 32) {
+		printf("Error : Wrong output size in splitBinary : size %lu and %lu and expected 32\n", strlen(L), strlen(R));
+	}
 }
