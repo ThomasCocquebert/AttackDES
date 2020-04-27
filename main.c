@@ -59,11 +59,21 @@ int main(int argc, char** argv) {
 	}
 
 	//Extension of R15
-	char* ER15 = processExtention(L16);
+	char* ER15 = processExtension(L16);
 
 	char* ER15Falt[32];
 	for(int i = 0; i < 32; i++) {
-		ER15Falt[i] = processExtention(L16Falt);
+		ER15Falt[i] = processExtension(L16Falt[i]);
+	}
+	
+	char ER15FaltReduce[8][32][7];
+	char PInvertXORReduce[8][32][5];
+
+	for(int i = 0; i < 8; i++) {
+		for(int j = 0; j < 32; j++) {
+			strncpy(ER15FaltReduce[i][j], splitBlocks6bits(ER15Falt[j], i+1), 7);
+			strncpy(PInvertXORReduce[i][j], splitBlocks4bits(PInvertXOR[j], i+1), 5);
+		}
 	}
 
 
@@ -72,7 +82,7 @@ int main(int argc, char** argv) {
 	free(CIP);
 	free(L16);
 	free(R16);
-	free(ER15)
+	free(ER15);
 	for(int i = 0; i < 32; i++) {
 		free(CFaltBinary[i]);
 		free(CFaltIP[i]);

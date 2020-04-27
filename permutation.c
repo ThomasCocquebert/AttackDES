@@ -170,3 +170,71 @@ char* processExtension(const char* input) {
 	free(e);
 	return output;
 }
+
+char* splitBlocks4bits(const char* input, int numSbox) {
+	char bitsSbox[5];
+	switch(numSbox) {
+		case 1:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i] = input[i];
+			}
+			return bitsSbox;
+
+		case 2:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+4] = input[i];
+			}
+			return bitsSbox;
+
+		case 3:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+8] = input[i];
+			}
+			return bitsSbox;
+
+		case 4:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+12] = input[i];
+			}
+			return bitsSbox;
+
+		case 5:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+16] = input[i];
+			}
+			return bitsSbox;
+
+		case 6:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+20] = input[i];
+			}
+			return bitsSbox;
+
+		case 7:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+24] = input[i];
+			}
+			return bitsSbox;
+
+		case 8:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i+28] = input[i];
+			}
+			return bitsSbox;
+
+		default:
+			bitsSbox[4] = '\0';
+			for(int i = 0; i < 4; i++) {
+				bitsSbox[i] = '/';
+			}
+			return bitsSbox;
+	}
+}

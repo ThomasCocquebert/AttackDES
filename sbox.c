@@ -284,3 +284,72 @@ void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int
 		}
 	}
 }
+
+char* splitBlocks6bits(const char* input, int numSbox) {
+	char bitsSbox[7];
+	switch(numSbox) {
+		case 1:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i] = input[i];
+			}
+			return bitsSbox;
+
+		case 2:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+6] = input[i];
+			}
+			return bitsSbox;
+
+		case 3:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+12] = input[i];
+			}
+			return bitsSbox;
+
+		case 4:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+18] = input[i];
+			}
+			return bitsSbox;
+
+		case 5:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+24] = input[i];
+			}
+			return bitsSbox;
+
+		case 6:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+30] = input[i];
+			}
+			return bitsSbox;
+
+		case 7:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+36] = input[i];
+			}
+			return bitsSbox;
+
+		case 8:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i+42] = input[i];
+			}
+			return bitsSbox;
+
+		default:
+			bitsSbox[6] = '\0';
+			for(int i = 0; i < 6; i++) {
+				bitsSbox[i] = '/';
+			}
+			return bitsSbox;
+	}
+}
+

@@ -30,4 +30,6 @@ void invertSbox(int columne, int line, char* input);
 //one int representing in which Sbox search and a string sboxOutput representing the value of the output of sbox
 void findInput(char* try1, char* try2, char* try3, char* try4, SBOXES boxes, int numSbox, int sboxOutput);
 
+char* splitBlocks6bits(const char* input, int numSbox);
+
 #endif
